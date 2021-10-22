@@ -3,8 +3,9 @@
 
 #include "LJsonNode.h"
 #include "LJsonScalar.h"
-#include "LJsonArray.h"
 #include "map"
+
+class LJsonArray;
 
 class LJsonObject : public LJsonNode {
     public:
@@ -17,14 +18,17 @@ class LJsonObject : public LJsonNode {
         LJsonObject* addChild(String key, double child);
         LJsonObject* addChild(String key, bool child);
         LJsonObject* addChild(String key, LJsonNode* child);
+
+        bool hasChild(String key);
         LJsonNode* getChild(String key);
+        LJsonObject* getChildObject(String key);
+        LJsonArray*  getChildArray(String key);
         LJsonScalar* getChildScalar(String key);
         LJsonScalar* getChildNumberInt(String key);
         LJsonScalar* getChildNumberDec(String key);
-        LJsonScalar* getChildNumberString(String key);
-        LJsonScalar* getChildNumberBool(String key);
-        LJsonArray* getChildNumberArray(String key);
-        LJsonObject* getChildNumberObject(String key);
+        LJsonScalar* getChilString(String key);
+        LJsonScalar* getChildBool(String key);
+
         virtual String toString();
         virtual LJsonType getType();
         virtual LJsonObject* clone();

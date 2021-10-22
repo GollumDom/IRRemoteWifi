@@ -20,6 +20,8 @@ class LJsonAsyncWebServer: public AsyncWebServer {
         AsyncCallbackWebHandler& onUpload(const char* uri, WebRequestMethodComposite method, ArGroupedUploadHandlerFunction onUpload);
         AsyncCallbackWebHandler& onBodyAndUpload(const char* uri, WebRequestMethodComposite method, ArGroupedBodyAndUploadHandlerFunction onBodyAndUpload);
 
+        AsyncCallbackWebHandler& onJson(const char* uri, WebRequestMethodComposite method, std::function<void(AsyncWebServerRequest* request, LJsonNode* json)> callback);
+        AsyncCallbackWebHandler& onJson(const char* uri, WebRequestMethodComposite method, std::function<void(AsyncWebServerRequest* request, LJsonNode* json, String body)> callback);
 
         template<typename T, typename std::enable_if<std::is_base_of<LDenormalized, T>::value>::type* = nullptr>
         AsyncCallbackWebHandler& onJson(const char* uri, WebRequestMethodComposite method, std::function<void(AsyncWebServerRequest* request, T* bindedObject)> callback) {
@@ -32,19 +34,14 @@ class LJsonAsyncWebServer: public AsyncWebServer {
         AsyncCallbackWebHandler& onJson(const char* uri, WebRequestMethodComposite method, std::function<void(AsyncWebServerRequest* request, T* bindedObject, String body)> callback) {
 
             return this->onBody(uri, method, [callback](AsyncWebServerRequest* request, String body) {
-                
-                LJsonNode* json = ljson_parse(body);
-                
-                if (json) {
-                    T* obj = new T();
-                    if (obj->fromJson(json)) {
-                        delete json;
-                        callback(request, obj, body);
-                        return;
-                    } else {
-                        delete json;
-                        delete obj;
-                    }
+
+                T* obj = new T();
+                if (ljson_parse(body, obj)) {
+                    Serial.println("cool");
+                    callback(request, obj, body);
+                    return;
+                } else {
+                    delete obj;
                 }
                 request->send(400, "application/json", "{\"error\":\"Parsing error\"}");
             });

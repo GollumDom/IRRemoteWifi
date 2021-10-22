@@ -54,10 +54,19 @@ LJsonNode* ljson_parse(String str) {
     return parser.parse(str);
 }
 
-LJsonNode* ljson_normalise(std::vector<LNormalized*>* value) {
+bool ljson_parse(String str, LDenormalized* obj) {
+    LJsonNode* json = ljson_parse(str);
+    if (!json) return false;
+    bool result = obj->fromJson(json);
+    delete json;
+    return result;
+}
+
+LJsonNode* ljson_normalize(VectorLNormalize* value) {
     LJsonArray* array = new LJsonArray();
     for (LNormalized* i: *value) {
-        array->addChild(i->toJson());
+        LJsonNode* c = i->toJson();
+        array->addChild(c);
     }
     return array;
 }

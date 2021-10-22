@@ -69,7 +69,7 @@ LJsonNode* WiFiConfig::toJson() {
 }
 
 bool jsonChildToIp(LJsonObject* obj, String key, IPAddress** ip) {
-    if (LJsonScalar* c = obj->getChildNumberString(key)) {
+    if (LJsonScalar* c = obj->getChilString(key)) {
         String s = c->getValueStr();
         
         if (s != "" ) {
@@ -89,10 +89,10 @@ bool WiFiConfig::fromJson(LJsonNode* json) {
     if (!json->isObject()) return false;
     
     LJsonObject* obj = (LJsonObject*)json;
-    if (LJsonScalar* c = obj->getChildNumberString("ssid")    ) { this->ssid     = c->getValueStr(); } else return false;
-    if (LJsonScalar* c = obj->getChildNumberString("password")) { this->password = c->getValueStr(); } else return false;
-    if (LJsonScalar* c = obj->getChildNumberString("mode")    ) { this->mode     = WiFiConfig::string2Mode(c->getValueStr()); } else return false;
-    if (LJsonScalar* c = obj->getChildNumberString("dhcp")    ) { this->dhcp     = WiFiConfig::string2DHCPMode(c->getValueStr()); } else return false;
+    if (LJsonScalar* c = obj->getChilString("ssid")    ) { this->ssid     = c->getValueStr(); } else return false;
+    if (LJsonScalar* c = obj->getChilString("password")) { this->password = c->getValueStr(); } else return false;
+    if (LJsonScalar* c = obj->getChilString("mode")    ) { this->mode     = WiFiConfig::string2Mode(c->getValueStr()); } else return false;
+    if (LJsonScalar* c = obj->getChilString("dhcp")    ) { this->dhcp     = WiFiConfig::string2DHCPMode(c->getValueStr()); } else return false;
     if (!jsonChildToIp(obj, "ip"     , &this->ip     )) { return false; }
     if (!jsonChildToIp(obj, "mask"   , &this->mask   )) { return false; }
     if (!jsonChildToIp(obj, "gateway", &this->gateway)) { return false; }

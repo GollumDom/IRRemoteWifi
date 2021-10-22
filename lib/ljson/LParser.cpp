@@ -137,6 +137,8 @@ bool LParser::_parseNumberDec(double &numberDec) {
     this->_curTmp = this->_cur;
     
     String agreagate = "";
+
+    aggregateCheck(agreagate, '-', '-', true);
     
     if (!aggregateCheck(agreagate, '0', '9')) {
         return false;
@@ -178,6 +180,8 @@ bool LParser::_parseNumberInt(long &numberInt) {
     
     String agreagate = "";
     
+    aggregateCheck(agreagate, '-', '-', true);
+
     if (!aggregateCheck(agreagate, '0', '9')) {
         return false;
     }

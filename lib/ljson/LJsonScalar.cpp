@@ -34,6 +34,62 @@ String LJsonScalar::getValueStr() {
     }
 }
 
+int LJsonScalar::getValueInt() {
+    switch (this->type) {
+        case STRING_VALUE: return std::atoi(this->valueStr.c_str());
+        case NULL_VALUE: return 0;
+        case BOOLEAN_VALUE: return (int)this->valueBool;
+        case DEC_VALUE: return (int)this->valueDec;
+        default: return (int)this->valueInt;
+    }
+}
+
+long LJsonScalar::getValueLong() {
+    switch (this->type) {
+        case STRING_VALUE: return std::atol(this->valueStr.c_str());
+        case NULL_VALUE: return 0L;
+        case BOOLEAN_VALUE: return (long)this->valueBool;
+        case DEC_VALUE: return (long)this->valueDec;
+        default: return this->valueInt;
+    }
+}
+
+bool LJsonScalar::getValueBool() {
+    String buf;
+    switch (this->type) {
+        case STRING_VALUE:
+            buf = String(this->valueStr);
+            buf.toLowerCase();
+            return buf == "true";
+        case NULL_VALUE: return false;
+        case BOOLEAN_VALUE: return this->valueBool;
+        case DEC_VALUE: return !!this->valueDec;
+        default: return !!this->valueInt;
+    }
+}
+
+float LJsonScalar::getValueFloat() {
+    switch (this->type) {
+        case STRING_VALUE: return std::atof(this->valueStr.c_str());
+        case NULL_VALUE: return 0.0F;
+        case BOOLEAN_VALUE: return (float)this->valueBool;
+        case DEC_VALUE: return (float)this->valueDec;
+        default: return (float)this->valueInt;
+    }
+}
+
+double LJsonScalar::getValueDouble() {
+    char* endPtr;
+    switch (this->type) {
+        case STRING_VALUE: return std::strtod(this->valueStr.c_str(), &endPtr);
+        case NULL_VALUE: return 0.0;
+        case BOOLEAN_VALUE: return (double)this->valueBool;
+        case DEC_VALUE: return this->valueDec;
+        default: return (double)this->valueInt;
+    }
+}
+
+
 String LJsonScalar::toString() {
     String result;
     switch (this->type) {

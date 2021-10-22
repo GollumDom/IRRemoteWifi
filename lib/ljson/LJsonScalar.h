@@ -23,6 +23,11 @@ class LJsonScalar : public LJsonNode {
         void setValue(bool value);
 
         String getValueStr();
+        int getValueInt();
+        long getValueLong();
+        bool getValueBool();
+        float getValueFloat();
+        double getValueDouble();
 
         virtual String toString();
         virtual LJsonType getType();

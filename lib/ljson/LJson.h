@@ -33,7 +33,8 @@ String ljson_stringify(VectorLJsonNode* value, boolean clear = false);
 String ljson_stringify(VectorLNormalize* value, boolean clear = false);
 
 LJsonNode* ljson_parse(String str);
+bool ljson_parse(String str, LDenormalized* obj);
 
-LJsonNode* ljson_normalise(std::vector<LNormalized*>* value);
+LJsonNode* ljson_normalize(std::vector<LNormalized*>* value);
 
 #endif
