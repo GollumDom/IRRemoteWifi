@@ -11,10 +11,12 @@ Use your remote for send a key signal. After open admin for stre your signal wit
 
 And for finish send signal by API.
 
-The led red is hear for status of device.
+The red led is hear for status of device.
  - Up and don't blink. Connected on WiFi
  - Blink. Is mode rescue enabled
  - Blink 4 and stop. SPIFF main error
+
+The blue led blink on signal send.
 
 The button enable rescue mode. But if long press, reset all configration.
 
@@ -28,8 +30,6 @@ The button enable rescue mode. But if long press, reset all configration.
 
 Return status of the device
 
-### IR
-
 **Body response**:
 ```ts
 {
@@ -39,6 +39,8 @@ Return status of the device
 }
 ```
 
+
+### IR
 
 
 `GET /api/ir/history-receive`
