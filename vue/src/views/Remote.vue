@@ -32,7 +32,7 @@
 									:key="i"
 									@change="loadDetail(signal)"
 								>
-									<v-expansion-panel-header>
+									<v-expansion-panel-header ripple>
 										{{ signal }}
 										<v-spacer />
 										<div style="margin-top: -10px; margin-bottom: -10px; text-align: right;">
