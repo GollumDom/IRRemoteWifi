@@ -10,7 +10,7 @@
 #include "SignalsSendInput.h"
 
 #define STORE_PATH "/remote"
-#define DELAY_BETWEEN_REPEAT 50
+#define DELAY_BETWEEN_REPEAT 30
 
 class IRService  {
 
