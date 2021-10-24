@@ -21,8 +21,8 @@
 						<v-card-text>
 							<v-progress-circular v-if="loadingDevice" indeterminate color="primary" size="70" width="7" />
 							<v-simple-table v-else>
-								<tr><th>Memory free: </th><td>{{ device.memory_free }} oct</td></tr>
-								<tr><th>Max free block: </th><td>{{ device.max_free_block }} oct</td></tr>
+								<tr><th>Memory free: </th><td>{{ device.memory_free }} Bytes</td></tr>
+								<tr><th>Max free block: </th><td>{{ device.max_free_block }} Bytes</td></tr>
 								<tr><th>Fragmentation: </th><td>{{ device.fragmentation }}%</td></tr>
 							</v-simple-table>
 						</v-card-text>

@@ -38,9 +38,6 @@ class WifiService {
 
     private:
 
-        static bool eventIsInit;
-        static void initEvent();
-
         String name;
         FileFS* fileFS;
         LJsonAsyncWebServer* webServer;

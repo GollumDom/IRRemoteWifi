@@ -218,13 +218,16 @@
 
 					<signal :signal="saveStore" />
 					<v-text-field
+						ref="keyInput"
 						v-model="saveKey"
 						label="Key"
 						class="mt-4"
 						clearable
 						outlined
-						@keyup="matchKey($event)"
-						@keydown="matchKey($event)"
+						@change="matchKey"
+						@keyup="matchKey"
+						@keydown="matchKey"
+						@blur="matchKey"
 					/>
 
 				</v-card-text>
@@ -330,15 +333,17 @@
 			}
 		},
 		saveKey() {
-			this.saveKey = this.saveKey.replace(/[^\w_\-]/g, '');
+			this.matchKey();
 		}
 	},
 
 	methods: {
 
-		matchKey(e: KeyboardEvent) {
-			if (e.key && !e.key.match(/^[\w_\-]$/)) {
-				e.preventDefault();
+		async matchKey() {
+			const saveKey = this.saveKey.replace(/[^\w_\-]/g, '');
+			if (this.saveKey !== saveKey) {
+				this.saveKey = saveKey;
+				(this.$refs['keyInput'] as any).lazyValue = this.saveKey;
 			}
 		},
 

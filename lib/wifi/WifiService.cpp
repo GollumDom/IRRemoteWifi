@@ -22,38 +22,6 @@ WifiService::~WifiService() {
     delete this->scanResults;
 }
 
-bool WifiService::eventIsInit = false;
-
-void WifiService::initEvent() {
-    if (!WifiService::eventIsInit) {
-        log_n("Initialize wifi event");
-        WifiService::eventIsInit = true;
-        WiFi.onSoftAPModeProbeRequestReceived([](const WiFiEventSoftAPModeProbeRequestReceived& event) {
-            log_n("WiFi AP request:");
-            log_n("    - Client MAC : " + mac2Str(event.mac));      
-        });
-        WiFi.onSoftAPModeStationConnected([](const WiFiEventSoftAPModeStationConnected& event) {
-            log_n("WiFi AP new connection:");
-            log_n("    - Client MAC : " + mac2Str(event.mac));
-        });
-        WiFi.onSoftAPModeStationDisconnected([](const WiFiEventSoftAPModeStationDisconnected& event) {
-            log_n("WiFi AP disconnection:");
-            log_n("    - Client MAC : " + mac2Str(event.mac));
-        });
-        WiFi.onWiFiModeChange([](const WiFiEventModeChange& event) {
-            log_n("WiFi mode change:");
-            log_l("    - mode : ");
-            switch (event.newMode) {
-                case WIFI_OFF   : log_n("WIFI_OFF")   ; break;
-                case WIFI_STA   : log_n("WIFI_STA")   ; break;
-                case WIFI_AP    : log_n("WIFI_AP")    ; break;
-                case WIFI_AP_STA: log_n("WIFI_AP_STA"); break;
-                default         : log_n("ERROR"); break;
-            }
-        });
-    }
-}
-
 String WifiService::getApSSID() {
     String chipID = String(ESP.getChipId(), HEX);
     chipID.toUpperCase();
@@ -98,7 +66,6 @@ void WifiService::init(String name, FileFS* fileFS, LJsonAsyncWebServer* webServ
     }
 
     this->scanAsync();
-    this->initEvent();
     this->initWebServer();
     this->startFromConfig();
 }
