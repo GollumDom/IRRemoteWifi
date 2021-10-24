@@ -1,4 +1,4 @@
-# IR Remote by WiFI
+# IR Remote by WiFi
 
 It's a esp8266 Remote IR managed by WiFi API and HTML5 Admin.
 
