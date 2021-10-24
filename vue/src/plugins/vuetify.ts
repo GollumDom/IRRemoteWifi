@@ -11,6 +11,8 @@ export default new Vuetify({
         clear: IconList.mdiCloseCircle,
         radioOn: IconList.mdiRadioboxMarked,
         radioOff: IconList.mdiRadioboxBlank,
+        expand: IconList.mdiChevronDown,
+        file: IconList.mdiPaperclip,
       } 
     },
     lang: {

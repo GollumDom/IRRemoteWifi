@@ -44,6 +44,7 @@ class IRService  {
         SignalData* findSignalDataInHistoryById(int id);
         void storeSignal(String key, SignalData* signal);
         SignalData* findSignalDataByKey(String key);
+        void deleteSignalDataByKey(String key);
         std::vector<String> listSignalStored();
 };
 

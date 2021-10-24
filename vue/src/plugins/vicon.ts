@@ -13,6 +13,11 @@ import {
 	mdiEyeOff,
 	mdiRadioboxBlank,
 	mdiRadioboxMarked,
+	mdiChevronDown,
+	mdiContentSave,
+	mdiDelete,
+	mdiPaperclip,
+	mdiPlus,
 } from '@mdi/js';
 
 
@@ -30,6 +35,11 @@ export const IconList = {
 	mdiEyeOff,
 	mdiRadioboxBlank,
 	mdiRadioboxMarked,
+	mdiChevronDown,
+	mdiContentSave,
+	mdiDelete,
+	mdiPaperclip,
+	mdiPlus,
 };
 
 Vue.prototype.$icons = IconList;

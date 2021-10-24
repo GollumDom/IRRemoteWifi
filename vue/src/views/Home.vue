@@ -12,7 +12,26 @@
 					<span class="error--text">{{ error }}</span>
 				</v-col>
 
-				<v-col cols="12" md="4">
+				<v-col cols="12" md="6">
+
+					<v-card>
+						<v-card-title>
+							Device Status
+						</v-card-title>
+						<v-card-text>
+							<v-progress-circular v-if="loadingDevice" indeterminate color="primary" size="70" width="7" />
+							<v-simple-table v-else>
+								<tr><th>Memory free: </th><td>{{ device.memory_free }} oct</td></tr>
+								<tr><th>Max free block: </th><td>{{ device.max_free_block }} oct</td></tr>
+								<tr><th>Fragmentation: </th><td>{{ device.fragmentation }}%</td></tr>
+							</v-simple-table>
+						</v-card-text>
+
+					</v-card>
+
+				</v-col>
+
+				<v-col cols="12" md="6">
 
 					<v-card>
 						<v-card-title>
@@ -51,23 +70,59 @@
 		data: () => ({
 			error: "",
 			loadingWifi: true,
+			loadingDevice: true,
+			interval: null,
 			wifi: {
 				mode: "",
 				ip: "",
 				quality: 0,
+			},
+			device: {
+				fragmentation: 0,
+				max_free_block: 0,
+				memory_free: 0,
 			}
 		}),
 
 		async mounted() {
-			this.error = "";
-			this.loadingWifi = true;
-			try {
-				this.wifi = await (await fetch('/api/wifi/status')).json();
-			} catch(e) {
-				this.error = "Error on load wifi status";
-				console.error(e);
-			}
-			this.loadingWifi = false;
+			await Promise.all([
+				this.refreshWifi(),
+				this.refreshDevice(),
+			]);
+			this.interval = setInterval(() => this.refreshDevice(false), 2000) as any;
+
 		},
+
+		destroyed() {
+			if (this.interval) {
+				clearInterval(this.interval as any);
+				this.interval = null;
+			}
+		},
+
+		methods: {
+			async refreshWifi() {
+				this.error = "";
+				this.loadingWifi = true;
+				try {
+					this.wifi = await (await fetch('/api/wifi/status')).json();
+				} catch(e) {
+					this.error = "Error on load wifi status";
+					console.error(e);
+				}
+				this.loadingWifi = false;
+			},
+			async refreshDevice(loading: boolean = true) {
+				this.error = "";
+				this.loadingDevice = loading;
+				try {
+					this.device = await (await fetch('/api/status')).json();
+				} catch(e) {
+					this.error = "Error on load device status";
+					console.error(e);
+				}
+				this.loadingDevice = false;
+			},
+		}
 	})
 </script>

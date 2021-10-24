@@ -176,9 +176,9 @@
 						</v-card-title>
 
 						<v-card-text>
-							<template v-for="wifi of scan" v-ripple>
+							<template v-for="(wifi, key) of scan" v-ripple>
 
-								<v-card class="mb-3" v-ripple style="cursor: pointer;" @click="value.ssid = wifi.ssid">
+								<v-card :key="key" class="mb-3" v-ripple style="cursor: pointer;" @click="value.ssid = wifi.ssid">
 									<v-card-title>
 										{{ wifi.ssid }}
 									</v-card-title>
@@ -245,8 +245,6 @@
 		}),
 
 		async mounted() {
-			this.error = "";
-			this.success = "";
 			this.refresh();
 			this.loadingInfo = true;
 			try {
@@ -263,6 +261,8 @@
 				this.loadingScan = true;
 				try {
 					this.scan = await (await fetch('/api/wifi/scan')).json();
+					this.error = "";
+					this.success = "";
 				} catch(e) {
 					this.error = "Error on load scan wifi";
 					console.error(e);
@@ -279,6 +279,8 @@
 						method: 'POST',
 						body: JSON.stringify(this.value)
 					}).then(r => { if (r.ok) return r; throw r; })).json();
+					this.error = "";
+					this.success = "";
 				} catch(e) {
 					this.error = "Error on save wifi configuration";
 					console.error(e);

@@ -37,6 +37,14 @@ void WebServer::init(u32 port) {
         request->send(response);
     });
 
+    this->webServer->on("/api/status", HTTP_GET, [] (AsyncWebServerRequest* request) {
+        request->send(200, "application/json", ljson_stringify((new LJsonObject)
+            ->addChild("fragmentation", ESP.getHeapFragmentation())
+            ->addChild("memory_free", (long)ESP.getFreeHeap())
+            ->addChild("max_free_block", (long)ESP.getMaxFreeBlockSize())
+        , true));
+    });
+
     this->webServer->begin();
 }
 

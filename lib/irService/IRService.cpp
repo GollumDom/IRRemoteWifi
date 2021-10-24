@@ -145,7 +145,7 @@ void IRService::initWebServer() {
 
     AsyncCallbackWebHandler* handlers[] = {
         
-        &this->webServer->on("/api/ir/receive-history", HTTP_GET, [this] (AsyncWebServerRequest* request) {
+        &this->webServer->on("/api/ir/history-receive", HTTP_GET, [this] (AsyncWebServerRequest* request) {
             request->send(200, "application/json", ljson_stringify((VectorLNormalize*)&this->signalDataHistory));
         }),
 
@@ -163,6 +163,17 @@ void IRService::initWebServer() {
             delete signalStoreInput;
 
             request->send(200, "application/json", ljson_stringify(signal));
+        }),
+
+        &this->webServer->onJson<SignalData>("/api/ir/restore", HTTP_POST, [this] (AsyncWebServerRequest* request, SignalData* signal) {
+
+            AsyncWebParameter* key = request->getParam("key");
+            if (key) {
+                this->storeSignal(key->value(), signal);
+                request->send(200, "application/json", ljson_stringify(signal, true));
+                return;
+            }
+            request->send(400, "application/json", "{\"error\":\"You must use key in param\"}");
         }),
 
         &this->webServer->on("/api/ir/store", HTTP_GET, [this] (AsyncWebServerRequest* request) {
@@ -186,6 +197,16 @@ void IRService::initWebServer() {
                 this->signalsSend.push_back(signal->clone());
             }
             request->send(200, "application/json", ljson_stringify(signalsSend, true));
+        }),
+
+        &this->webServer->on("/api/ir/delete", HTTP_POST, [this] (AsyncWebServerRequest* request) {
+            AsyncWebParameter* key = request->getParam("key");
+            if (key) {
+                this->deleteSignalDataByKey(key->value());
+                request->send(200, "application/json", "{\"success\":true}");
+                return;
+            }
+            request->send(400, "application/json", "{\"error\":\"You must use key in param\"}");
         })
 
     };
@@ -193,6 +214,9 @@ void IRService::initWebServer() {
     this->webServerHandlers.push_back(handlers[1]);
     this->webServerHandlers.push_back(handlers[2]);
     this->webServerHandlers.push_back(handlers[3]);
+    this->webServerHandlers.push_back(handlers[4]);
+    this->webServerHandlers.push_back(handlers[5]);
+
 }
 
 std::vector<String> IRService::listSignalStored() {
@@ -207,7 +231,7 @@ std::vector<String> IRService::listSignalStored() {
 void IRService::clearStoredSignals() {
     log_n("Clear stored signal");
 
-    for(String key: IRService::listSignalStored()) {
+    for(String key: this->listSignalStored()) {
         LittleFS.remove(F(STORE_PATH "/") + key);
 	}
 }
@@ -230,6 +254,13 @@ SignalData* IRService::findSignalDataByKey(String key) {
         }
     }
     return NULL;
+}
+
+void IRService::deleteSignalDataByKey(String key) {
+     String path = F(STORE_PATH "/") + key;
+    if (LittleFS.exists(path)) {
+        LittleFS.remove(path);
+    }
 }
 
 SignalData* IRService::findSignalDataInHistoryById(int id) {

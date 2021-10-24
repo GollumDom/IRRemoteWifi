@@ -69,12 +69,15 @@ void loop() {
     wifiService.loop();
     irService.loop();
 
-    if (ESP.getFreeHeap() < 8000) {
+    if (ESP.getFreeHeap() < 5000) {
         ESP.restart();
     }
     uint64 now = millis();
-    if (now- previous > 2000) {
-        log_l("MEMORY: "); log_n(ESP.getFreeHeap());
+    if (now - previous > 2000) {
+        previous = now;
+        log_l("MEMORY: "); log_l(ESP.getFreeHeap())
+        ;log_l(" MFB: "); log_l(ESP.getMaxFreeBlockSize());
+        ;log_l(" FRAG: "); log_n(ESP.getHeapFragmentation());
     }
 
 }
